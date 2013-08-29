@@ -1,0 +1,11 @@
+<Alloy>
+	
+	<View id="autoCompleteContainer" class="acContainer">
+		
+		<TableView id="autoCompleteTableView" onClick="setTextfieldValue" />
+		
+		<Label id="autoCompleteMessage" />
+		
+	</View>
+
+</Alloy>

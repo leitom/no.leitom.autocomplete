@@ -1,0 +1,13 @@
+{
+    "id":"no.leitom.autocomplete",
+    "name":"no.leitom.autocomplete",
+    "description":"Adds an autocomplete to your textfields with optinal data source",
+    "author":"Tommy Leirvik",
+    "version":"1.0",
+    "copyright":"Copyright (c) 2013",
+    "license":"Apache 2.0",
+    "min-alloy-version": "1.1",
+    "min-titanium-version":"3.0",
+    "tags":"textfield,autocomplete",
+    "platforms":"ios,android"
+}
