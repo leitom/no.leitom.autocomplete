@@ -17,10 +17,25 @@ var options = {
     
 };
 
+// Keep some widget global references
+var collection = false, 
+    data = false;
+
 // Append user settings
 function setOptions(_properties) {
     
     _.extend(options, _properties);
+    
+    // Create the instance of the collection if provided
+    if( typeof(options.collection) !== 'undefined' ) {
+        collection = Alloy.createCollection( options.collection );
+        collection.fetch();
+    }
+    
+    // Assign the local widget var data with the data provided
+    if( typeof(options.data) !== 'undefined' ) {
+        data = options.data;
+    }
     
     return;
     
@@ -86,29 +101,44 @@ function setTextfieldValue(_e) {
 // Show the autocomplete
 function show() {
     
-    if( typeof(options.data) !== 'undefined' ) {
+    // Our filtered data container
+    var filteredData = [];
     
-        var filteredData = [];
+    // Regex for searching the data
+    var filter = new RegExp(options.textfield.value, 'i');
     
-        for( var i in options.data ) {
+    // Widget support collections. We first try to se if the user provided a collection
+    if( collection ) {
+        
+        collection.map( function(_obj) {
             
-            var filter = new RegExp(options.textfield.value,'i');
+            if( _obj.get(options.collectionFilterAttribute).match(filter) ) {
+                filteredData.push( {title: _obj.get(options.collectionFilterAttribute)} );
+            }
             
-            if( options.data[i].match(filter) ) {
-                filteredData.push( {title:options.data[i]} );
+        });
+        
+    }
+    // If the user does not provide a collection but instead a array of values we use that instead
+    else if( data ) {
+        
+        for( var i in data ) {
+            
+            if( data[i].match(filter) ) {
+                filteredData.push( {title:data[i]} );
             }
             
         }
         
-        if( filteredData.length > 0 ) {
-            $.autoCompleteTableView.setData( filteredData );
-            $.autoCompleteContainer.opacity = 1.0;    
-        }
-        else {
-            $.autoCompleteTableView.setData( [] );
-            $.autoCompleteContainer.opacity = 0.0;
-        }
-        
+    }
+    
+    if( filteredData.length > 0 ) {
+        $.autoCompleteTableView.setData( filteredData );
+        $.autoCompleteContainer.opacity = 1.0;    
+    }
+    else {
+        $.autoCompleteTableView.setData( [] );
+        hide();
     }
     
     return true;
